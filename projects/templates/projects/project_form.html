@@ -1,15 +1,6 @@
 {% extends 'main.html' %}
 
 {% block content %}
-
-<h1>project form</h1>
-<form method="post" action="" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.as_p}}
-
-<input type="submit">
-</form>
-
  <!-- Main Section -->
  <main class="formPage my-xl">
     <div class="content-box">
@@ -19,6 +10,7 @@
 
             <form class="form" method="POST" enctype="multipart/form-data">
                 <!-- Input:Text -->
+                {% csrf_token %}
                 {% for field in form %}
                 <div class="form__field">
                     <label for="formInput#text"> {{field.label}} </label>
