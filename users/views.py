@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login , logout ,authenticate
-from .models import Profile
+from .models import Profile , Skill
 from django.contrib import messages
 from .forms import CostomUserCreationForm, ProfileForm, SkillForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
+from .utils import searchProfiles
 # Create your views here.
 
 def loginPage(request):
@@ -58,8 +58,9 @@ def registerUser(request):
     return render(request, 'users/login_register.html', context)
 
 def profiles_view(request):  
-    profiles = Profile.objects.all()
-    context ={'profiles': profiles}
+    
+    profiles, search_query = searchProfiles(request)
+    context ={'profiles': profiles, 'search_query':search_query}
     return render(request, 'users/profiles.html', context )
 
 
@@ -116,11 +117,44 @@ def createSkill(request):
             skill = form.save(commit=False)
             skill.owner = profile
             skill.save()
+            messages.success(request, 'Skill added Successfully')
             return redirect('account')
-       
-
     context = {
         'form': form
-
     }
     return render(request, 'users/skill_form.html', context)
+
+
+
+ 
+@login_required(login_url='login')
+def updateSkill(request, pk):
+    profile  = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+    form = SkillForm(instance = skill)
+
+    if request.method == "POST":
+        form = SkillForm(request.POST, instance= skill)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Skill updated successfully')
+            return redirect('account')
+            
+    context = {
+        'form': form
+    }
+
+    return render(request, 'users/skill_form.html', context)
+
+
+
+def deleteSkill(request, pk):
+    profile  = request.user.profile
+    skill = profile.skill_set.get(pk=pk)
+    if request.method == 'POST':
+        skill.delete()
+        messages.success(request, 'Skill was deleted successfully')
+        return redirect('account')
+
+    context = {'object':skill }
+    return render(request, 'delete_template.html', context)
