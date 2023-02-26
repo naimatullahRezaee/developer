@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 def projects(request):
 
     search_query , projects = searchProjects(request)
-    custom_page , projects = paginateProjects(request, projects, 6)
+    custom_page , projects = paginateProjects(request, projects, 2)
 
     context = {'projects':projects, 'search_query': search_query, 'custom_page': custom_page}
     return render(request, 'projects/projects.html' , context)
