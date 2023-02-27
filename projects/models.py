@@ -23,6 +23,14 @@ class Project(models.Model):
 
     class Meta:
         ordering = ['-vote_ratio', '-vote_total','title']
+    #  we get all the user that reviewed on the project
+    @property
+    def reviewer(self):
+        queryset = self.review_set.all().values_list('owner__id', flat=True)
+        return queryset
+
+
+
 
     @property
     def getVoteCount(self):
