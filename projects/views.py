@@ -26,6 +26,7 @@ def single_project(request, pk):
         review.project = project
         review.owner = request.user.profile
         review.save()
+        project.getVoteCount
 
         messages.success(request, 'your review was successfully submitted')
         return redirect('single-project', pk=project.id)
