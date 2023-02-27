@@ -60,7 +60,7 @@ def registerUser(request):
 def profiles_view(request):  
     
     profiles, search_query = searchProfiles(request)
-    custom_page, profiles = paginateProfiles(request, profiles,1)
+    custom_page, profiles = paginateProfiles(request, profiles,2)
     context ={'profiles': profiles, 'search_query':search_query, 'custom_page': custom_page}
     return render(request, 'users/profiles.html', context )
 
